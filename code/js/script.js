@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const navCollapse = document.getElementById("mainNavigation");
   const backToTop = document.getElementById("backToTop");
   const form = document.getElementById("enquiryForm");
+  const phone = document.getElementById("phone");
   const checkin = document.getElementById("checkin");
   const checkout = document.getElementById("checkout");
   const formSuccess = document.getElementById("formSuccess");
@@ -75,6 +76,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validateField(field) {
     let isValid = field.checkValidity();
+    if (field === phone && phone.value.trim()) {
+      const normalizedPhone = phone.value.replace(/[\s-]/g, "");
+      isValid = /^(?:\+91)?[6-9]\d{9}$/.test(normalizedPhone);
+    }
     if (field === checkin && field.value && field.value < today) {
       isValid = false;
     }
@@ -97,10 +102,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  phone.addEventListener("input", function () {
+    validateField(phone);
+  });
+
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     const requiredFields = Array.from(form.querySelectorAll("[required]"));
-    const isFormValid = requiredFields.map(validateField).every(Boolean);
+    const isFormValid = requiredFields.map(validateField).every(Boolean) && validateField(phone);
     if (!isFormValid) {
       form.querySelector(".is-invalid").focus();
       return;
