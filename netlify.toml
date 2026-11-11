@@ -1,0 +1,3 @@
+[build]
+  # The static site lives in the "code" folder, not the repository root.
+  publish = "code"
